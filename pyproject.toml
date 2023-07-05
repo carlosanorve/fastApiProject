@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fastapiproject"
+version = "0.1.0"
+description = ""
+authors = ["Carlos Añorve <carlos.anorve@millicom.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.98.0"
+uvicorn = "^0.22.0"
+pymongo = "^4.4.0"
+tqdm = "^4.65.0"
+xlrd = "^2.0.1"
+openpyxl = "^3.1.2"
+toml = "^0.10.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
