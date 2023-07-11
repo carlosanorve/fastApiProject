@@ -80,7 +80,7 @@ class Internationalization(Collections):
 
         return {"SYNC": available_sync, "DATA": screens}
 
-    def get_country(self, screen):
+    def get_screens_details(self, screen):
         collections = self.get_collection_names()
 
         _data = {}
@@ -114,11 +114,17 @@ class Internationalization(Collections):
         for collection in collections:
             self._add_tag(country=collection, screen=screen, tag=tag, value=values.get(collection, ""))
 
+    def add_new_screen(self, *, screen_name: str, connection=None):
+        countries = self.get_collection_names()
+        for country in countries:
+            coll = self.db[country] if (connection is None) else connection
+            coll.insert_one({"SCREEN": screen_name, "VALUES": []})
+
     def _add_tag(self, *, country, screen, tag, value):
         coll = self.db[country]
         document_exists = coll.find_one({'SCREEN': screen})
         if not document_exists:
-            coll.insert_one({"SCREEN": screen, "VALUES": []})
+            self.add_new_screen(screen_name=screen, connection=coll)
 
         coll.update_one(
             {'SCREEN': screen},

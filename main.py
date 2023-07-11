@@ -58,7 +58,7 @@ def get_screens(screen_name: str):
     connection = Internationalization()
     connection.connect()
 
-    screen_data = connection.get_country(screen_name)
+    screen_data = connection.get_screens_details(screen_name)
     connection.disconnect()
     return screen_data
 
@@ -70,6 +70,16 @@ def add_screen(new_tag: TagData):
     connection.connect()
 
     connection.add_new_tag(screen=new_tag.screen, tag=new_tag.name, values=new_tag.data)
+    connection.disconnect()
+
+
+@app.post("/screens")
+def add_screen(screen_data: ScreenData):
+    print(f"body: {screen_data}")
+    connection = Internationalization()
+    connection.connect()
+
+    connection.add_new_screen(screen_name=screen_data.name)
     connection.disconnect()
 
 
