@@ -16,6 +16,9 @@ openpyxl = "^3.1.2"
 toml = "^0.10.2"
 
 
+[tool.poetry.group.dev.dependencies]
+boto3 = "^1.27.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

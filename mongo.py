@@ -1,9 +1,11 @@
 from pathlib import Path
 from typing import Dict
-from config import config
 
 import openpyxl
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
+from config import config
 
 
 class MongoConnection:
@@ -13,6 +15,7 @@ class MongoConnection:
         self.user = config.USER
         self.password = config.PASSWORD
         self.options = config.OPTIONS
+        self.uri = config.URI
 
         self.database = database
 
@@ -21,8 +24,13 @@ class MongoConnection:
 
     def connect(self):
         print("connectando...")
-        string_connection = f'mongodb://{self.user}:{self.password}@{self.host}:{self.port}{self.options}'
-        self.client = MongoClient(string_connection, retryWrites=False)
+        if self.uri:
+            string_connection = self.uri
+            self.client = MongoClient(string_connection, server_api=ServerApi('1'))
+        else:
+            string_connection = f'mongodb://{self.user}:{self.password}@{self.host}:{self.port}{self.options}'
+            self.client = MongoClient(string_connection, retryWrites=False)
+
         self.db = self.client[self.database]
         print("connectado")
 
@@ -85,7 +93,7 @@ class Internationalization(Collections):
                     _data.setdefault(key, {"KEY": key, "VALUE": []})
                     _data[key]["VALUE"].append({
                         "country": collection,
-                        "value": value
+                        "value": value.replace("\\n", "\n")
                     })
         for data in _data:
             for e in collections:

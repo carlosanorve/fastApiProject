@@ -9,6 +9,8 @@ class Config:
         self.USER = config_data["USER"]
         self.PASSWORD = config_data["PASSWORD"]
         self.OPTIONS = config_data["OPTIONS"]
+        self.URI = config_data["URI"]
+
 
 
 config = Config("config.toml")
