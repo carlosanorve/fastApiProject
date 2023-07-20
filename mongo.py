@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 from config import config
+from exceptions import ScreenAlreadyExistsException
 
 
 class MongoConnection:
@@ -116,6 +117,9 @@ class Internationalization(Collections):
 
     def add_new_screen(self, *, screen_name: str, connection=None):
         countries = self.get_collection_names()
+        screens = [n["NAME"] for n in self.get_screens()["DATA"]]
+        if screen_name in screens:
+            raise ScreenAlreadyExistsException(screen_name)
         for country in countries:
             coll = self.db[country] if (connection is None) else connection
             coll.insert_one({"SCREEN": screen_name, "VALUES": []})

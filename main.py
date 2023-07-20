@@ -1,10 +1,11 @@
 from typing import Dict
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from exceptions import ScreenAlreadyExistsException
 from mongo import Internationalization
 
 
@@ -78,9 +79,12 @@ def add_screen(screen_data: ScreenData):
     print(f"body: {screen_data}")
     connection = Internationalization()
     connection.connect()
-
-    connection.add_new_screen(screen_name=screen_data.name)
-    connection.disconnect()
+    try:
+        connection.add_new_screen(screen_name=screen_data.name)
+    except ScreenAlreadyExistsException as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        connection.disconnect()
 
 
 @app.get("/countries")
